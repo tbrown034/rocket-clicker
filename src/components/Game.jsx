@@ -11,6 +11,7 @@ function Game() {
   const [isLaunched, setIsLaunched] = useState(false); // Launch status of the rocket
   const [currentMilestoneIndex, setCurrentMilestoneIndex] = useState(0); // Index of the current milestone
   const [bonusBoostCount, setBonusBoostCount] = useState(0); // Count of available bonus boosts
+  const [intervalDelay, setIntervalDelay] = useState(1000); // Delay for the interval, starting at 1s
 
   const [milestones, setMilestones] = useState([
     { distance: 100, message: "Cleared Earth's atmosphere", boost: 10 },
@@ -73,6 +74,7 @@ function Game() {
     setIsLaunched(false); // Set the launch status to false
     setBonusBoostCount(0); // Reset the bonus boost count
     setCurrentMilestoneIndex(0); // Reset the current milestone index
+    setIntervalDelay(1000);
   };
 
   const launch = () => {
@@ -81,15 +83,19 @@ function Game() {
 
   useEffect(() => {
     let interval;
+
     if (isLaunched) {
       interval = setInterval(() => {
         setDistance((prevDistance) => prevDistance + 1);
-      }, 1000);
-    } else if (!isLaunched) {
+      }, intervalDelay);
+    } else {
       clearInterval(interval);
     }
-    return () => clearInterval(interval);
-  }, [isLaunched]);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isLaunched, intervalDelay]);
 
   useEffect(() => {
     if (
@@ -98,6 +104,7 @@ function Game() {
     ) {
       setBonusBoostCount((prevCount) => prevCount + 1);
       setCurrentMilestoneIndex((prevIndex) => prevIndex + 1);
+      setIntervalDelay((prevIntervalDelay) => prevIntervalDelay * 0.5); // Decrease the interval delay by 50%
     }
   }, [distance, currentMilestoneIndex, milestones]);
 
