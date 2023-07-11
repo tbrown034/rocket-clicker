@@ -7,7 +7,7 @@ function BoostButton({ onClick }) {
       onClick={onClick}
     >
       {" "}
-      Booster 🔋
+      Launch 🚀
     </button>
   );
 }

@@ -1,35 +1,49 @@
-import React, { useState } from "react";
-import Rocket from "./Rocket";
+import React, { useState, useEffect } from "react";
+import Status from "./Status";
 import BoostButton from "./BoostButton";
-import Achievements from "./Achievements";
-import Upgrades from "./Upgrades";
+import BackButton from "./BackButton";
+import LaunchButton from "./LaunchButton";
 
 function Game() {
   const [distance, setDistance] = useState(0);
-  const [achievements, setAchievements] = useState([]);
-  const [upgrades, setUpgrades] = useState([
-    { name: "Auto-Booster", cost: 10 },
-    { name: "Fuel Efficiency", cost: 20 },
-  ]);
+  const [isLaunched, setIsLaunched] = useState(false);
 
   const boost = () => {
-    setDistance(distance + 1);
+    setDistance(distance + 10);
   };
 
-  const purchaseUpgrade = (index) => {
-    const upgrade = upgrades[index];
-    if (distance >= upgrade.cost) {
-      setDistance(distance - upgrade.cost);
-      setAchievements([...achievements, upgrade.name]);
-    }
+  const back = () => {
+    setDistance(0);
+    setIsLaunched(false);
   };
+
+  const launch = () => {
+    setIsLaunched(true);
+  };
+
+  useEffect(() => {
+    let interval;
+    if (isLaunched) {
+      interval = setInterval(() => {
+        setDistance((distance) => distance + 1);
+      }, 1000);
+    } else if (!isLaunched && distance !== 0) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [isLaunched, distance]);
 
   return (
-    <div>
-      <Rocket distance={distance} />
-      <BoostButton onClick={boost} />
-      {/* <Achievements achievements={achievements} />
-      <Upgrades upgrades={upgrades} onPurchase={purchaseUpgrade} /> */}
+    <div className="flex flex-col gap-20 py-20">
+      {isLaunched ? (
+        <>
+          <Status distance={distance} />
+          <BoostButton onClick={boost} />
+          <BackButton onClick={back} />
+        </>
+      ) : (
+        <LaunchButton onClick={launch} />
+      )}
     </div>
   );
 }

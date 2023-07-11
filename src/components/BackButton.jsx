@@ -1,15 +1,15 @@
 import React from "react";
 
-function BoostButton({ onClick }) {
+function BackButton({ onClick }) {
   return (
     <button
       className="   border-4 p-2  border-slate-300 rounded-2xl"
       onClick={onClick}
     >
       {" "}
-      Booster 🔋
+      Return to Earth 🌎
     </button>
   );
 }
 
-export default BoostButton;
+export default BackButton;

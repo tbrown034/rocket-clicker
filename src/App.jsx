@@ -2,13 +2,11 @@ import React from "react";
 import Game from "./components/Game";
 import Header from "./components/Header";
 
-function App() {
+export default function App() {
   return (
-    <div className="App h-screen flex items-center justify-center bg-gray-800 text-white">
+    <div className="p-4 min-h-screen gap-8 bg-blue-950 text-sky-50">
       <Header />
       <Game />
     </div>
   );
 }
-
-export default App;
