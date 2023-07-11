@@ -72,6 +72,7 @@ function Game() {
     setDistance(0); // Reset the distance to 0 when the back button is clicked
     setIsLaunched(false); // Set the launch status to false
     setBonusBoostCount(0); // Reset the bonus boost count
+    setCurrentMilestoneIndex(0); // Reset the current milestone index
   };
 
   const launch = () => {

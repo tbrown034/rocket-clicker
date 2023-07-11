@@ -1,14 +1,14 @@
 // BonusBoosts.jsx
 import React from "react";
 
-function BonusButton({ onClick }) {
+function BonusButton({ onClick, count }) {
   return (
     <button
-      className=" py-8 text-xl hover:bg-blue-500   border-4 p-2  border-slate-300 rounded-2xl"
+      className="p-2 py-8 text-xl border-4  hover:bg-blue-500 border-slate-300 rounded-2xl"
       onClick={onClick}
     >
       {" "}
-      Bonus Boost ⚡
+      Bonus Boost ({count}) ⚡
     </button>
   );
 }
