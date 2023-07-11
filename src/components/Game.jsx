@@ -1,4 +1,3 @@
-// Game.jsx
 import React, { useState, useEffect } from "react";
 import Status from "./Status";
 import BoostButton from "./BoostButton";
@@ -8,10 +7,10 @@ import Achievements from "./Achievements";
 import BonusButton from "./BonusButton";
 
 function Game() {
-  const [distance, setDistance] = useState(0);
-  const [isLaunched, setIsLaunched] = useState(false);
-  const [currentMilestoneIndex, setCurrentMilestoneIndex] = useState(0);
-  const [bonusAvailable, setBonusAvailable] = useState(false);
+  const [distance, setDistance] = useState(0); // Distance traveled by the rocket
+  const [isLaunched, setIsLaunched] = useState(false); // Launch status of the rocket
+  const [currentMilestoneIndex, setCurrentMilestoneIndex] = useState(0); // Index of the current milestone
+  const [bonusBoostCount, setBonusBoostCount] = useState(0); // Count of available bonus boosts
 
   const [milestones, setMilestones] = useState([
     { distance: 100, message: "Cleared Earth's atmosphere", boost: 10 },
@@ -56,48 +55,50 @@ function Game() {
     { distance: 24000, message: "Crossed the orbit of Neptune", boost: 200 },
   ]);
   const boost = () => {
-    setDistance(distance + 10);
+    setDistance(distance + 10); // Increase the distance by 10 when the boost button is clicked
   };
 
   const bonusBoost = () => {
-    // Use the boost from the current milestone
-    setDistance(distance + milestones[currentMilestoneIndex].boost);
-    // Set bonusAvailable to false
-    setBonusAvailable(false);
+    if (bonusBoostCount > 0) {
+      // Check if there are available bonus boosts
+      setDistance(
+        distance + milestones[currentMilestoneIndex].boost * bonusBoostCount
+      ); // Increase the distance by the boosted value
+      setBonusBoostCount(bonusBoostCount - 1); // Decrease the bonus boost count
+    }
   };
 
   const back = () => {
-    setDistance(0);
-    setIsLaunched(false);
+    setDistance(0); // Reset the distance to 0 when the back button is clicked
+    setIsLaunched(false); // Set the launch status to false
+    setBonusBoostCount(0); // Reset the bonus boost count
   };
 
   const launch = () => {
-    setIsLaunched(true);
+    setIsLaunched(true); // Set the launch status to true when the launch button is clicked
   };
 
   useEffect(() => {
     let interval;
     if (isLaunched) {
       interval = setInterval(() => {
-        setDistance((distance) => {
-          // Check if the rocket has reached the next milestone
-          if (
-            currentMilestoneIndex < milestones.length &&
-            distance >= milestones[currentMilestoneIndex].distance
-          ) {
-            // Update the currentMilestoneIndex
-            setCurrentMilestoneIndex(currentMilestoneIndex + 1);
-            // Set bonusAvailable to true
-            setBonusAvailable(true);
-          }
-          return distance + 1;
-        });
+        setDistance((prevDistance) => prevDistance + 1);
       }, 1000);
-    } else if (!isLaunched && distance !== 0) {
+    } else if (!isLaunched) {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [isLaunched, distance, currentMilestoneIndex, milestones]);
+  }, [isLaunched]);
+
+  useEffect(() => {
+    if (
+      currentMilestoneIndex < milestones.length &&
+      distance >= milestones[currentMilestoneIndex].distance
+    ) {
+      setBonusBoostCount((prevCount) => prevCount + 1);
+      setCurrentMilestoneIndex((prevIndex) => prevIndex + 1);
+    }
+  }, [distance, currentMilestoneIndex, milestones]);
 
   return (
     <div className="flex flex-col gap-20 py-20">
@@ -107,7 +108,18 @@ function Game() {
           <Achievements
             milestones={milestones.slice(0, currentMilestoneIndex)}
           />
-          {bonusAvailable && <BonusButton onClick={bonusBoost} />}
+          {currentMilestoneIndex < milestones.length && (
+            <div>
+              <h2>Next Achievement</h2>
+              <p>
+                {milestones[currentMilestoneIndex].message} at{" "}
+                {milestones[currentMilestoneIndex].distance} km
+              </p>
+            </div>
+          )}
+          {bonusBoostCount > 0 && (
+            <BonusButton onClick={bonusBoost} count={bonusBoostCount} />
+          )}
           <div className="flex flex-col gap-8 ">
             <BoostButton onClick={boost} />
             <BackButton onClick={back} />
