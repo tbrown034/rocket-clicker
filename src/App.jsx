@@ -4,7 +4,7 @@ import Header from "./components/Header";
 
 export default function App() {
   return (
-    <div className="p-4 min-h-screen gap-8 bg-blue-950 text-sky-50">
+    <div className="p-4 min-h-screen gap-8 bg-blue-900 text-sky-50">
       <Header />
       <Game />
     </div>
