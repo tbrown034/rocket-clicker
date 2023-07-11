@@ -5,6 +5,7 @@ import BackButton from "./BackButton";
 import LaunchButton from "./LaunchButton";
 import Achievements from "./Achievements";
 import BonusButton from "./BonusButton";
+import Rules from "./Rules";
 
 function Game() {
   const [distance, setDistance] = useState(0); // Distance traveled by the rocket
@@ -75,7 +76,7 @@ function Game() {
     setIsLaunched(false); // Set the launch status to false
     setBonusBoostCount(0); // Reset the bonus boost count
     setCurrentMilestoneIndex(0); // Reset the current milestone index
-    setIntervalDelay(1000);
+    setSpeed(1);
   };
 
   const launch = () => {
@@ -117,14 +118,14 @@ function Game() {
         <>
           <Status distance={distance} />
           <div>
-            <h2>Speed: {speed.toFixed(2)} km/s</h2>
+            <h2>Speed: {speed.toFixed(2)} mi/s</h2>
           </div>
           <Achievements
             milestones={milestones.slice(0, currentMilestoneIndex)}
           />
           {currentMilestoneIndex < milestones.length && (
             <div>
-              <h2>Next Achievement</h2>
+              <h2>Next Milestone</h2>
               <p>
                 {milestones[currentMilestoneIndex].message} at{" "}
                 {milestones[currentMilestoneIndex].distance} km
@@ -140,7 +141,10 @@ function Game() {
           </div>
         </>
       ) : (
-        <LaunchButton onClick={launch} />
+        <div className="flex flex-col gap-4">
+          <LaunchButton onClick={launch} />
+          <Rules />
+        </div>
       )}
     </div>
   );
