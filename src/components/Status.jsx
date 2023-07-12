@@ -1,11 +1,18 @@
 import React from "react";
 
-function Status({ distance }) {
-  const formattedDistance = distance.toFixed(2); // Format the distance with two decimal points
+function Status({ distance, speed }) {
+  const formattedDistance = distance.toFixed(0);
+  const formattedSpeed = speed.toFixed(0);
+  // Format the distance with two decimal points
 
   return (
-    <div className="text-xl">
-      Rocky Rocket 🚀 has travelled {formattedDistance} miles!
+    <div className="flex justify-around text-xl">
+      <div className="p-2 border-2 border-blue-50 rounded-xl">
+        {formattedSpeed} MPH
+      </div>
+      <div className="p-2 border-2 border-blue-50 rounded-xl">
+        {formattedDistance} Miles Traveled
+      </div>
     </div>
   );
 }

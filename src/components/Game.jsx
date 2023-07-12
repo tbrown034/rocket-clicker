@@ -88,16 +88,14 @@ function Game() {
   }, [rewardTimer]);
 
   return (
-    <div className="flex flex-col gap-20 py-20">
+    <div className="flex flex-col gap-4">
       {isLaunched ? (
         <>
           <BoostButton onClick={boost} />
 
-          <Status distance={distance} />
+          <Status distance={distance} speed={passiveSpeed} />
           <div className="flex flex-col gap-8 "></div>
-          <div>
-            <h2>Speed: {passiveSpeed.toFixed(1)} mi/s</h2>
-          </div>
+
           <Achievements
             milestones={milestones.slice(0, currentMilestoneIndex)}
             nextMilestone={milestones[currentMilestoneIndex]}
