@@ -4,7 +4,6 @@ import BoostButton from "./BoostButton";
 import BackButton from "./BackButton";
 import LaunchButton from "./LaunchButton";
 import Achievements from "./Achievements";
-import Rewards from "./Rewards"; // Assuming you have a Rewards component
 import Rules from "./Rules";
 import milestones from "./MilestonesData";
 
@@ -17,7 +16,6 @@ function Game() {
   const [boostSpeed, setBoostSpeed] = useState(1);
   const [timedModifier, setTimedModifier] = useState(1);
   const [rewardTimer, setRewardTimer] = useState(0);
-  const [rewardSelected, setRewardSelected] = useState(false);
 
   const boost = () => {
     setDistance(distance + boostSpeed * timedModifier);
@@ -31,20 +29,16 @@ function Game() {
     setBoostSpeed(1);
     setTimedModifier(1);
     setRewardTimer(0);
-    setRewardSelected(false);
   };
 
   const launch = () => {
     setIsLaunched(true);
+    milestones[0].completedAt = new Date().toLocaleString(); // Add this line
   };
 
-  const applyReward = (reward) => {
-    setRewardSelected(true);
-    if (reward.type === "bonusBoost") {
-      setDistance(distance + reward.value);
-    } else if (reward.type === "timedModifier") {
-      setTimedModifier(reward.value);
-      setRewardTimer(10); // Set the time duration for the timed modifier
+  const getHome = () => {
+    if (distance >= milestones[milestones.length - 1].distance) {
+      setIsLaunched(false);
     }
   };
 
@@ -69,41 +63,30 @@ function Game() {
       currentMilestoneIndex < milestones.length &&
       distance >= milestones[currentMilestoneIndex].distance
     ) {
-      setCurrentMilestoneIndex(currentMilestoneIndex + 1);
+      setCurrentMilestoneIndex((prevIndex) => {
+        const newIndex = prevIndex + 1;
+        milestones[newIndex].completedAt = new Date().toLocaleString(); // Record current timestamp
+        return newIndex;
+      });
       setPassiveSpeed(passiveSpeed + currentMilestoneIndex * 0.5); // Increasing speed progressively with milestones
       setBoostSpeed(boostSpeed + currentMilestoneIndex * 0.5); // Increasing boost speed progressively with milestones
     }
   }, [distance, currentMilestoneIndex, milestones]);
 
   useEffect(() => {
-    if (rewardTimer > 0) {
-      const timer = setTimeout(() => {
-        setRewardTimer(rewardTimer - 1);
-      }, 1000);
-      if (rewardTimer === 1) {
-        setTimedModifier(1); // Reset the timed modifier when the timer runs out
-      }
-      return () => clearTimeout(timer);
-    }
-  }, [rewardTimer]);
+    getHome();
+  }, [distance]);
 
   return (
     <div className="flex flex-col gap-4">
       {isLaunched ? (
         <>
           <BoostButton onClick={boost} />
-
           <Status distance={distance} speed={passiveSpeed} />
-          <div className="flex flex-col gap-8 "></div>
-
           <Achievements
             milestones={milestones.slice(0, currentMilestoneIndex)}
             nextMilestone={milestones[currentMilestoneIndex]}
           />
-          {!rewardSelected && currentMilestoneIndex > 0 && (
-            <Rewards onRewardSelected={applyReward} />
-          )}
-          <BackButton onClick={back} />
         </>
       ) : (
         <div className="flex flex-col gap-4">
@@ -111,6 +94,7 @@ function Game() {
           <Rules />
         </div>
       )}
+      {isLaunched && <BackButton onClick={back} />}
     </div>
   );
 }

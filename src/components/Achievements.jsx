@@ -2,34 +2,45 @@ import React from "react";
 
 function Achievements({ milestones, nextMilestone }) {
   return (
-    <div className="flex flex-col justify-center">
+    <div className="flex flex-col justify-center gap-4 p-4 text-white rounded-lg shadow-md">
       {milestones[milestones.length - 1] && (
-        <div className="p-2 text-xl border-4 active:bg-blue-900 border-slate-300 rounded-2xl">
-          <h2>Current Status:</h2>
-          <p>
+        <div className="p-4 bg-blue-700 rounded-lg shadow-inner">
+          <h2 className="mb-2 text-2xl font-semibold ">Current Status:</h2>
+          <p className="text-lg font-bold border-t border-blue-600">
             {milestones[milestones.length - 1].step} at{" "}
-            {milestones[milestones.length - 1].distance} miles.
+            {milestones[milestones.length - 1].distance} miles
           </p>
-          <p>{milestones[milestones.length - 1].story}</p>
+          <p className="mt-1 text-sm">
+            Reached on: {milestones[milestones.length - 1].completedAt}
+          </p>
+          <p className="mt-2 text-sm">
+            {milestones[milestones.length - 1].story}
+          </p>
         </div>
       )}
       {nextMilestone && (
-        <div className="p-2 text-xl border-4 active:bg-blue-900 border-slate-300 rounded-2xl">
-          <h2>Next Milestone:</h2>
-          <p>
+        <div className="p-4 mt-4 bg-blue-700 rounded-lg shadow-inner">
+          <h2 className="mb-2 text-2xl font-semibold">Next Milestone:</h2>
+          <p className="flex flex-col pt-2 mt-2 border-t border-blue-600">
             {nextMilestone.step} at {nextMilestone.distance} miles.
           </p>
         </div>
       )}
-      <h2>Log:</h2>
-      {milestones.slice(0, milestones.length - 1).map((milestone, index) => (
-        <div className="flex flex-col" key={index}>
-          <p>
-            {milestone.step} at {milestone.distance} miles.
-          </p>
-          <p>{milestone.story}</p>
-        </div>
-      ))}
+      <div className="p-4 mt-4 bg-blue-700 rounded-lg shadow-inner">
+        <h2 className="mb-2 text-2xl font-semibold">Log:</h2>
+        {milestones.slice(0, milestones.length - 1).map((milestone, index) => (
+          <div
+            className="flex flex-col pt-2 mt-2 border-t border-blue-600"
+            key={index}
+          >
+            <p className="text-lg">
+              {milestone.step} at {milestone.distance} miles.
+            </p>
+            <p className="mt-1 text-sm">Reached on: {milestone.completedAt}</p>
+            <p className="mt-1 text-sm">{milestone.story}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
