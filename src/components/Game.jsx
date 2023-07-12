@@ -99,21 +99,18 @@ function Game() {
       <Header />
       <div className="flex flex-col gap-8 py-8">
         {isLaunched ? (
-          <>
+          <div className="flex flex-col gap-20 py-8">
             <BoostButton onClick={boost} />
             <Status distance={distance} speed={passiveSpeed} />
             <Achievements
               milestones={milestones.slice(0, currentMilestoneIndex)}
               nextMilestone={milestones[currentMilestoneIndex]}
             />
-          </>
+          </div>
         ) : (
-          <div className="flex flex-col gap-8 py-8 ">
+          <div className="flex flex-col gap-20 py-8 ">
             <LaunchButton onClick={launch} />
-            <div className="flex flex-col gap-8 p-8">
-              <Rules />
-              <LaunchButton onClick={launch} />
-            </div>
+            <Rules />
           </div>
         )}
         {isLaunched && <PauseResumeButton />}
