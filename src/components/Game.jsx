@@ -15,7 +15,8 @@ function Game() {
   const [passiveSpeed, setPassiveSpeed] = useState(1);
   const [boostSpeed, setBoostSpeed] = useState(1);
   const [timedModifier, setTimedModifier] = useState(1);
-  const [rewardTimer, setRewardTimer] = useState(0);
+  // const [rewardTimer, setRewardTimer] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   const boost = () => {
     setDistance(distance + boostSpeed * timedModifier);
@@ -45,7 +46,7 @@ function Game() {
   useEffect(() => {
     let interval;
 
-    if (isLaunched) {
+    if (isLaunched && !isPaused) {
       interval = setInterval(() => {
         setDistance((prevDistance) => prevDistance + passiveSpeed);
       }, intervalDelay);
@@ -56,7 +57,7 @@ function Game() {
     return () => {
       clearInterval(interval);
     };
-  }, [isLaunched, intervalDelay, passiveSpeed]);
+  }, [isLaunched, intervalDelay, passiveSpeed, isPaused]);
 
   useEffect(() => {
     if (
@@ -78,7 +79,7 @@ function Game() {
   }, [distance]);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-20 py-20">
       {isLaunched ? (
         <>
           <BoostButton onClick={boost} />
@@ -93,6 +94,14 @@ function Game() {
           <LaunchButton onClick={launch} />
           <Rules />
         </div>
+      )}
+      {isLaunched && (
+        <button
+          className="p-2 py-8 text-xl border-4 hover:bg-blue-500 border-slate-300 rounded-2xl"
+          onClick={() => setIsPaused(!isPaused)}
+        >
+          {isPaused ? "Resume ➡️" : "Pause ⏸️"}
+        </button>
       )}
       {isLaunched && <BackButton onClick={back} />}
     </div>
