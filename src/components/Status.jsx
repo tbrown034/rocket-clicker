@@ -6,22 +6,22 @@ function Status({ distance, speed }) {
   const formattedSpeed = speed.toFixed(0);
 
   return (
-    <div className="flex justify-around text-xl">
+    <div className="flex justify-around text-sm">
       <motion.div
         className="p-2 border-2 border-blue-50 rounded-xl"
-        key={formattedSpeed}
+        key={`speed-${formattedSpeed}`}
         initial={{ scale: 1 }}
         animate={{ scale: 1.1 }}
-        transition={{ duration: 2, yoyo: Infinity }}
+        transition={{ duration: 0.5, yoyo: Infinity }}
       >
-        {formattedSpeed} MPS
+        {formattedSpeed} Miles Per Second
       </motion.div>
       <motion.div
         className="p-2 border-2 border-blue-50 rounded-xl"
-        key={formattedDistance}
+        key={`distance-${formattedDistance}`}
         initial={{ scale: 1 }}
         animate={{ scale: 1.1 }}
-        transition={{ duration: 2, yoyo: Infinity }}
+        transition={{ duration: 0.5, yoyo: Infinity }}
       >
         {formattedDistance} Miles Traveled
       </motion.div>

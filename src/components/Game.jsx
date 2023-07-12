@@ -15,8 +15,8 @@ function Game() {
   const [passiveSpeed, setPassiveSpeed] = useState(1);
   const [boostSpeed, setBoostSpeed] = useState(1);
   const [timedModifier, setTimedModifier] = useState(1);
-  // const [rewardTimer, setRewardTimer] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const boost = () => {
     setDistance(distance + boostSpeed * timedModifier);
@@ -29,17 +29,17 @@ function Game() {
     setPassiveSpeed(1);
     setBoostSpeed(1);
     setTimedModifier(1);
-    setRewardTimer(0);
   };
 
   const launch = () => {
     setIsLaunched(true);
-    milestones[0].completedAt = new Date().toLocaleString(); // Add this line
+    milestones[0].completedAt = new Date().toLocaleString(); // Initialize completedAt property for the first milestone
   };
 
   const getHome = () => {
     if (distance >= milestones[milestones.length - 1].distance) {
       setIsLaunched(false);
+      setIsCompleted(true);
     }
   };
 
@@ -66,17 +66,30 @@ function Game() {
     ) {
       setCurrentMilestoneIndex((prevIndex) => {
         const newIndex = prevIndex + 1;
-        milestones[newIndex].completedAt = new Date().toLocaleString(); // Record current timestamp
+        milestones[newIndex].completedAt = new Date().toLocaleString(); // Initialize completedAt property for the next milestone
         return newIndex;
       });
-      setPassiveSpeed(passiveSpeed + currentMilestoneIndex * 0.5); // Increasing speed progressively with milestones
-      setBoostSpeed(boostSpeed + currentMilestoneIndex * 0.5); // Increasing boost speed progressively with milestones
+      setPassiveSpeed(passiveSpeed + currentMilestoneIndex * 0.5);
+      setBoostSpeed(boostSpeed + currentMilestoneIndex * 0.5);
     }
   }, [distance, currentMilestoneIndex, milestones]);
 
   useEffect(() => {
     getHome();
   }, [distance]);
+
+  if (isCompleted) {
+    return (
+      <div className="completion-screen">
+        <h1>Congratulations, brave explorer!</h1>
+        <p>
+          You've journeyed through the cosmos and achieved every milestone!
+          Rocky the Rocket is proud of you!
+        </p>
+        <button onClick={() => setIsCompleted(false)}>Back to Earth</button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-20 py-20">
@@ -90,7 +103,7 @@ function Game() {
           />
         </>
       ) : (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-10">
           <LaunchButton onClick={launch} />
           <Rules />
         </div>
