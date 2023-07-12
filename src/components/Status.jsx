@@ -1,8 +1,12 @@
 import React from "react";
 
 function Status({ distance }) {
+  const formattedDistance = distance.toFixed(2); // Format the distance with two decimal points
+
   return (
-    <div className="text-6xl">Your Rocket has travelled {distance} miles!</div>
+    <div className="text-xl">
+      Rocky Rocket 🚀 has travelled {formattedDistance} miles!
+    </div>
   );
 }
 

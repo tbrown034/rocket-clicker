@@ -4,83 +4,48 @@ import BoostButton from "./BoostButton";
 import BackButton from "./BackButton";
 import LaunchButton from "./LaunchButton";
 import Achievements from "./Achievements";
-import BonusButton from "./BonusButton";
+import Rewards from "./Rewards"; // Assuming you have a Rewards component
 import Rules from "./Rules";
+import milestones from "./MilestonesData";
 
 function Game() {
-  const [distance, setDistance] = useState(0); // Distance traveled by the rocket
-  const [isLaunched, setIsLaunched] = useState(false); // Launch status of the rocket
-  const [currentMilestoneIndex, setCurrentMilestoneIndex] = useState(0); // Index of the current milestone
-  const [bonusBoostCount, setBonusBoostCount] = useState(0); // Count of available bonus boosts
-  const [intervalDelay, setIntervalDelay] = useState(1000); // Delay for the interval, starting at 1s
-  const [speed, setSpeed] = useState(1); // Speed of the rocket, starts at 1
+  const [distance, setDistance] = useState(0);
+  const [isLaunched, setIsLaunched] = useState(false);
+  const [currentMilestoneIndex, setCurrentMilestoneIndex] = useState(0);
+  const [intervalDelay, setIntervalDelay] = useState(1000);
+  const [passiveSpeed, setPassiveSpeed] = useState(1);
+  const [boostSpeed, setBoostSpeed] = useState(1);
+  const [timedModifier, setTimedModifier] = useState(1);
+  const [rewardTimer, setRewardTimer] = useState(0);
+  const [rewardSelected, setRewardSelected] = useState(false);
 
-  const [milestones, setMilestones] = useState([
-    { distance: 100, message: "Cleared Earth's atmosphere", boost: 10 },
-    { distance: 400, message: "Reached the thermosphere", boost: 20 },
-    { distance: 1000, message: "Entered low Earth orbit (LEO)", boost: 30 },
-    {
-      distance: 2000,
-      message: "Completed one full orbit around Earth",
-      boost: 40,
-    },
-    { distance: 2500, message: "Crossed the Kármán line", boost: 50 },
-    { distance: 3000, message: "Entered the mesosphere", boost: 60 },
-    { distance: 4000, message: "Reached the stratopause", boost: 70 },
-    { distance: 5000, message: "Entered the ionosphere", boost: 80 },
-    { distance: 6000, message: "Reached the exosphere", boost: 90 },
-    { distance: 7000, message: "Crossed the magnetopause", boost: 100 },
-    {
-      distance: 8000,
-      message: "Passed through the Van Allen radiation belts",
-      boost: 110,
-    },
-    {
-      distance: 9000,
-      message: "Reached escape velocity from Earth's gravitational pull",
-      boost: 120,
-    },
-    { distance: 10000, message: "Entered heliocentric orbit", boost: 130 },
-    { distance: 12000, message: "Crossed the orbit of Venus", boost: 140 },
-    { distance: 14000, message: "Crossed the orbit of Mars", boost: 150 },
-    { distance: 16000, message: "Crossed the asteroid belt", boost: 160 },
-    {
-      distance: 18000,
-      message: "Entered Jupiter's gravitational influence",
-      boost: 170,
-    },
-    { distance: 20000, message: "Crossed the orbit of Saturn", boost: 180 },
-    {
-      distance: 22000,
-      message: "Entered Uranus's gravitational influence",
-      boost: 190,
-    },
-    { distance: 24000, message: "Crossed the orbit of Neptune", boost: 200 },
-  ]);
   const boost = () => {
-    setDistance(distance + 10); // Increase the distance by 10 when the boost button is clicked
-  };
-
-  const bonusBoost = () => {
-    if (bonusBoostCount > 0) {
-      // Check if there are available bonus boosts
-      setDistance(
-        distance + milestones[currentMilestoneIndex].boost * bonusBoostCount
-      ); // Increase the distance by the boosted value
-      setBonusBoostCount(bonusBoostCount - 1); // Decrease the bonus boost count
-    }
+    setDistance(distance + boostSpeed * timedModifier);
   };
 
   const back = () => {
-    setDistance(0); // Reset the distance to 0 when the back button is clicked
-    setIsLaunched(false); // Set the launch status to false
-    setBonusBoostCount(0); // Reset the bonus boost count
-    setCurrentMilestoneIndex(0); // Reset the current milestone index
-    setSpeed(1);
+    setDistance(0);
+    setIsLaunched(false);
+    setCurrentMilestoneIndex(0);
+    setPassiveSpeed(1);
+    setBoostSpeed(1);
+    setTimedModifier(1);
+    setRewardTimer(0);
+    setRewardSelected(false);
   };
 
   const launch = () => {
-    setIsLaunched(true); // Set the launch status to true when the launch button is clicked
+    setIsLaunched(true);
+  };
+
+  const applyReward = (reward) => {
+    setRewardSelected(true);
+    if (reward.type === "bonusBoost") {
+      setDistance(distance + reward.value);
+    } else if (reward.type === "timedModifier") {
+      setTimedModifier(reward.value);
+      setRewardTimer(10); // Set the time duration for the timed modifier
+    }
   };
 
   useEffect(() => {
@@ -88,7 +53,7 @@ function Game() {
 
     if (isLaunched) {
       interval = setInterval(() => {
-        setDistance((prevDistance) => prevDistance + 1);
+        setDistance((prevDistance) => prevDistance + passiveSpeed);
       }, intervalDelay);
     } else {
       clearInterval(interval);
@@ -97,48 +62,50 @@ function Game() {
     return () => {
       clearInterval(interval);
     };
-  }, [isLaunched, intervalDelay]);
+  }, [isLaunched, intervalDelay, passiveSpeed]);
 
   useEffect(() => {
     if (
       currentMilestoneIndex < milestones.length &&
       distance >= milestones[currentMilestoneIndex].distance
     ) {
-      setBonusBoostCount((prevCount) => prevCount + 1);
-      setCurrentMilestoneIndex((prevIndex) => prevIndex + 1);
-      setIntervalDelay((prevIntervalDelay) => prevIntervalDelay * 0.5); // Decrease the interval delay by 50%
-
-      setSpeed((prevSpeed) => prevSpeed * 1.5); // Here we increase the speed by 50%
+      setCurrentMilestoneIndex(currentMilestoneIndex + 1);
+      setPassiveSpeed(passiveSpeed + currentMilestoneIndex * 0.5); // Increasing speed progressively with milestones
+      setBoostSpeed(boostSpeed + currentMilestoneIndex * 0.5); // Increasing boost speed progressively with milestones
     }
   }, [distance, currentMilestoneIndex, milestones]);
+
+  useEffect(() => {
+    if (rewardTimer > 0) {
+      const timer = setTimeout(() => {
+        setRewardTimer(rewardTimer - 1);
+      }, 1000);
+      if (rewardTimer === 1) {
+        setTimedModifier(1); // Reset the timed modifier when the timer runs out
+      }
+      return () => clearTimeout(timer);
+    }
+  }, [rewardTimer]);
 
   return (
     <div className="flex flex-col gap-20 py-20">
       {isLaunched ? (
         <>
+          <BoostButton onClick={boost} />
+
           <Status distance={distance} />
+          <div className="flex flex-col gap-8 "></div>
           <div>
-            <h2>Speed: {speed.toFixed(2)} mi/s</h2>
+            <h2>Speed: {passiveSpeed.toFixed(1)} mi/s</h2>
           </div>
           <Achievements
             milestones={milestones.slice(0, currentMilestoneIndex)}
+            nextMilestone={milestones[currentMilestoneIndex]}
           />
-          {currentMilestoneIndex < milestones.length && (
-            <div>
-              <h2>Next Milestone</h2>
-              <p>
-                {milestones[currentMilestoneIndex].message} at{" "}
-                {milestones[currentMilestoneIndex].distance} km
-              </p>
-            </div>
+          {!rewardSelected && currentMilestoneIndex > 0 && (
+            <Rewards onRewardSelected={applyReward} />
           )}
-          {bonusBoostCount > 0 && (
-            <BonusButton onClick={bonusBoost} count={bonusBoostCount} />
-          )}
-          <div className="flex flex-col gap-8 ">
-            <BoostButton onClick={boost} />
-            <BackButton onClick={back} />
-          </div>
+          <BackButton onClick={back} />
         </>
       ) : (
         <div className="flex flex-col gap-4">
