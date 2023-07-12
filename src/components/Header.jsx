@@ -32,19 +32,21 @@ export default function Header({ onReset }) {
       </nav>
 
       {showMenu && (
-        <div className="flex flex-col items-center justify-center w-1/4 gap-4 p-4 ml-auto text-white transition-all duration-500 ease-in-out transform bg-blue-600 bg-opacity-50 rounded-2xl">
-          <button
-            className="px-4 py-2 text-sm font-bold text-white transition-all bg-blue-500 rounded-lg hover:bg-blue-400 active:bg-blue-300"
-            onClick={closeMenu}
-          >
-            Close
-          </button>
-          <button
-            className="px-4 py-2 text-sm font-bold text-white transition-all bg-blue-500 rounded-lg hover:bg-blue-400 active:bg-blue-300"
-            onClick={handleReset}
-          >
-            Reset Game
-          </button>
+        <div className="flex justify-end">
+          <div className="flex flex-col flex-wrap items-end justify-center gap-2 p-2 m-2 text-white transition-all duration-500 ease-in-out transform bg-blue-200 rounded-2xl ">
+            <button
+              className="px-4 py-2 text-sm font-bold text-white transition-all bg-blue-500 rounded-lg hover:bg-blue-400 active:bg-blue-300"
+              onClick={closeMenu}
+            >
+              Close
+            </button>
+            <button
+              className="px-4 py-2 text-sm font-bold text-white transition-all bg-blue-500 rounded-lg hover:bg-blue-400 active:bg-blue-300"
+              onClick={handleReset}
+            >
+              Reset Game
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -9,6 +9,8 @@ import Rules from "./Rules";
 import Congratulations from "./Congratulations";
 import milestones from "./MilestonesData";
 import Header from "./Header";
+import MilestoneProgressBar from "./MilestoneProgressBar";
+import GameProgressBar from "./GameProgressBar";
 
 function Game() {
   const [distance, setDistance] = useState(0);
@@ -31,16 +33,15 @@ function Game() {
     setPassiveSpeed(1);
     setBoostSpeed(1);
     setTimedModifier(1);
-    setIsCompleted(false); // Reset the completion state
-  };
-
-  const togglePause = () => {
-    setIsPaused((prevIsPaused) => !prevIsPaused);
   };
 
   const launch = () => {
     setIsLaunched(true);
     milestones[0].completedAt = new Date().toLocaleString();
+  };
+
+  const togglePause = () => {
+    setIsPaused((prevIsPaused) => !prevIsPaused);
   };
 
   useEffect(() => {
@@ -82,7 +83,7 @@ function Game() {
   }, [distance, currentMilestoneIndex, milestones]);
 
   if (isCompleted) {
-    return <Congratulations onReset={back} />;
+    return <Congratulations onReset={() => setIsCompleted(false)} />;
   }
 
   return (
@@ -93,6 +94,14 @@ function Game() {
           <div className="flex flex-col gap-4 py-8">
             <BoostButton onClick={boost} />
             <Status distance={distance} speed={passiveSpeed} />
+            <MilestoneProgressBar
+              currentDistance={distance}
+              nextMilestoneDistance={milestones[currentMilestoneIndex].distance}
+            />
+            <GameProgressBar
+              currentDistance={distance}
+              totalDistance={milestones[milestones.length - 1].distance}
+            />
             <Achievements
               milestones={milestones.slice(0, currentMilestoneIndex)}
               nextMilestone={milestones[currentMilestoneIndex]}

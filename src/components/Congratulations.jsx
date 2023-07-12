@@ -6,7 +6,7 @@ const Congratulations = ({ onReset }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen text-white bg-blue-500">
+    <div className="flex flex-col items-center justify-center h-screen p-8 text-white bg-blue-500">
       <h1 className="text-4xl font-bold">Congratulations, brave explorer!</h1>
       <p className="mt-4 text-xl">
         You've journeyed through the cosmos and achieved every milestone! Rocky

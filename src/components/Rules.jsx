@@ -11,7 +11,7 @@ function Rules() {
       heading: "How to Play",
       instructions: [
         "Travel 1 km every second. You're on an exciting path!",
-        "Use the 'Booster' for a quick 10 km sprint. Zoom ahead!",
+        "Use the 'Booster' for a quick 10 mile sprint. Zoom ahead!",
         "Reach milestones to increase your speed. Faster and faster you go!",
         "Milestones give 'Bonus Boosts'. Use them wisely for a speed surge!",
         "Check the 'Milestones' section to see what exciting event awaits next.",
