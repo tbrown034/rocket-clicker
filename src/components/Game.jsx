@@ -14,7 +14,6 @@ function Game() {
   const [distance, setDistance] = useState(0);
   const [isLaunched, setIsLaunched] = useState(false);
   const [currentMilestoneIndex, setCurrentMilestoneIndex] = useState(0);
-  const [intervalDelay, setIntervalDelay] = useState(1000);
   const [passiveSpeed, setPassiveSpeed] = useState(1);
   const [boostSpeed, setBoostSpeed] = useState(1);
   const [timedModifier, setTimedModifier] = useState(1);
@@ -39,20 +38,13 @@ function Game() {
     milestones[0].completedAt = new Date().toLocaleString(); // Initialize completedAt property for the first milestone
   };
 
-  const getHome = () => {
-    if (distance >= milestones[milestones.length - 1].distance) {
-      setIsLaunched(false);
-      setIsCompleted(true);
-    }
-  };
-
   useEffect(() => {
     let interval;
 
     if (isLaunched && !isPaused) {
       interval = setInterval(() => {
         setDistance((prevDistance) => prevDistance + passiveSpeed);
-      }, intervalDelay);
+      }, 1000);
     } else {
       clearInterval(interval);
     }
@@ -60,7 +52,7 @@ function Game() {
     return () => {
       clearInterval(interval);
     };
-  }, [isLaunched, intervalDelay, passiveSpeed, isPaused]);
+  }, [isLaunched, passiveSpeed, isPaused]);
 
   useEffect(() => {
     if (
@@ -75,11 +67,12 @@ function Game() {
       setPassiveSpeed(passiveSpeed + currentMilestoneIndex * 0.5);
       setBoostSpeed(boostSpeed + currentMilestoneIndex * 0.5);
     }
-  }, [distance, currentMilestoneIndex, milestones]);
 
-  useEffect(() => {
-    getHome();
-  }, [distance]);
+    if (distance >= milestones[milestones.length - 1].distance) {
+      setIsLaunched(false);
+      setIsCompleted(true);
+    }
+  }, [distance, currentMilestoneIndex, milestones]);
 
   if (isCompleted) {
     return (
@@ -108,7 +101,7 @@ function Game() {
             />
           </div>
         ) : (
-          <div className="flex flex-col gap-20 py-8 ">
+          <div className="flex flex-col gap-20 p-8 ">
             <LaunchButton onClick={launch} />
             <Rules />
           </div>

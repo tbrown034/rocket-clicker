@@ -6,9 +6,9 @@ function Status({ distance, speed }) {
   const formattedSpeed = speed.toFixed(0);
 
   return (
-    <div className="flex justify-around text-sm">
+    <div className="flex flex-wrap justify-around gap-4 font-bold sm:text-2xl">
       <motion.div
-        className="p-2 border-2 border-blue-50 rounded-xl"
+        className="p-2 border-4 border-blue-50 rounded-xl"
         key={`speed-${formattedSpeed}`}
         initial={{ scale: 1 }}
         animate={{ scale: 1.1 }}
@@ -17,7 +17,7 @@ function Status({ distance, speed }) {
         {formattedSpeed} Miles Per Second
       </motion.div>
       <motion.div
-        className="p-2 border-2 border-blue-50 rounded-xl"
+        className="p-2 border-4 border-blue-50 rounded-xl"
         key={`distance-${formattedDistance}`}
         initial={{ scale: 1 }}
         animate={{ scale: 1.1 }}
