@@ -22,7 +22,10 @@ function Rules() {
 
   return (
     <div className="flex flex-col gap-4 p-4 text-white bg-blue-700 rounded-2xl">
-      <h2 className="text-2xl font-bold underline">Journey Guide</h2>
+      <h2 className="text-2xl font-bold underline underline-offset-8">
+        {" "}
+        Guide
+      </h2>
       {rules.map((rule, i) => (
         <div className="flex flex-col gap-1" key={i}>
           <h3 className="text-lg font-semibold">{rule.heading}</h3>

@@ -5,7 +5,7 @@ function BoostButton({ onClick }) {
   return (
     <div className="flex justify-center">
       <motion.button
-        className="p-8 text-4xl text-white bg-blue-500 rounded-2xl sm:p-16 focus:outline-none"
+        className="p-8 text-4xl text-white bg-blue-600 rounded-2xl sm:p-16 focus:outline-none"
         onClick={onClick}
         whileTap={{
           scale: 1.2,

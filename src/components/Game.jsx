@@ -6,9 +6,9 @@ import PauseResumeButton from "./PauseResumeButton";
 import LaunchButton from "./LaunchButton";
 import Achievements from "./Achievements";
 import Rules from "./Rules";
+import Congratulations from "./Congratulations";
 import milestones from "./MilestonesData";
 import Header from "./Header";
-import { motion } from "framer-motion";
 
 function Game() {
   const [distance, setDistance] = useState(0);
@@ -31,11 +31,16 @@ function Game() {
     setPassiveSpeed(1);
     setBoostSpeed(1);
     setTimedModifier(1);
+    setIsCompleted(false); // Reset the completion state
+  };
+
+  const togglePause = () => {
+    setIsPaused((prevIsPaused) => !prevIsPaused);
   };
 
   const launch = () => {
     setIsLaunched(true);
-    milestones[0].completedAt = new Date().toLocaleString(); // Initialize completedAt property for the first milestone
+    milestones[0].completedAt = new Date().toLocaleString();
   };
 
   useEffect(() => {
@@ -61,7 +66,9 @@ function Game() {
     ) {
       setCurrentMilestoneIndex((prevIndex) => {
         const newIndex = prevIndex + 1;
-        milestones[newIndex].completedAt = new Date().toLocaleString(); // Initialize completedAt property for the next milestone
+        if (newIndex < milestones.length) {
+          milestones[newIndex].completedAt = new Date().toLocaleString();
+        }
         return newIndex;
       });
       setPassiveSpeed(passiveSpeed + currentMilestoneIndex * 0.5);
@@ -75,24 +82,15 @@ function Game() {
   }, [distance, currentMilestoneIndex, milestones]);
 
   if (isCompleted) {
-    return (
-      <div className="completion-screen">
-        <h1>Congratulations, brave explorer!</h1>
-        <p>
-          You've journeyed through the cosmos and achieved every milestone!
-          Rocky the Rocket is proud of you!
-        </p>
-        <button onClick={() => setIsCompleted(false)}>Back to Earth</button>
-      </div>
-    );
+    return <Congratulations onReset={back} />;
   }
 
   return (
     <div>
-      <Header />
+      <Header onReset={back} />
       <div className="flex flex-col gap-8 py-8">
         {isLaunched ? (
-          <div className="flex flex-col gap-20 py-8">
+          <div className="flex flex-col gap-4 py-8">
             <BoostButton onClick={boost} />
             <Status distance={distance} speed={passiveSpeed} />
             <Achievements
@@ -106,7 +104,9 @@ function Game() {
             <Rules />
           </div>
         )}
-        {isLaunched && <PauseResumeButton />}
+        {isLaunched && (
+          <PauseResumeButton isPaused={isPaused} togglePause={togglePause} />
+        )}
         {isLaunched && <BackButton onClick={back} />}
       </div>
     </div>

@@ -1,20 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 
-function PauseResumeButton() {
-  const [isPaused, setIsPaused] = useState(false);
-
+function PauseResumeButton({ isPaused, togglePause }) {
   return (
     <div className="flex justify-center">
       <motion.button
-        className={`p-12 text-4xl text-white bg-blue-500 rounded-lg sm:p-16 focus:outline-none ${
+        className={`p-8 text-4xl text-white bg-blue-600 rounded-2xl sm:p-16 focus:outline-none ${
           isPaused ? "hover:border-green-500" : "hover:border-yellow-500"
         }`}
-        onClick={() => setIsPaused(!isPaused)}
+        onClick={togglePause}
         whileTap={{
           scale: 1.2,
           boxShadow: `${
-            isPaused ? "0 0 50px 10px #008000" : "0 0 50px 10px #ff8c00"
+            isPaused ? "0 0 50px 10px #008000" : "0 0 50px 10px #FFD700"
           }`,
         }}
         whileHover={{
@@ -22,16 +20,10 @@ function PauseResumeButton() {
           boxShadow: `${isPaused ? "0 0 30px #ADFF2F" : "0 0 30px #FFFFE0"}`,
         }}
       >
-        <span
-          role="img"
-          aria-label={isPaused ? "Resume" : "Pause"}
-          style={{ fontSize: "1.5rem" }}
-        >
-          {isPaused ? "➡️" : "⏸️"}
-        </span>
-        <p>{isPaused ? "Resume" : "Pause"}</p>
+        {isPaused ? "Resume" : "Pause"}
       </motion.button>
     </div>
   );
 }
+
 export default PauseResumeButton;
