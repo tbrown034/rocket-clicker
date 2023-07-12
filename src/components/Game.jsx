@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import Status from "./Status";
 import BoostButton from "./BoostButton";
 import BackButton from "./BackButton";
+import PauseResumeButton from "./PauseResumeButton";
 import LaunchButton from "./LaunchButton";
 import Achievements from "./Achievements";
 import Rules from "./Rules";
 import milestones from "./MilestonesData";
+import Header from "./Header";
+import { motion } from "framer-motion";
 
 function Game() {
   const [distance, setDistance] = useState(0);
@@ -92,31 +95,30 @@ function Game() {
   }
 
   return (
-    <div className="flex flex-col gap-20 py-20">
-      {isLaunched ? (
-        <>
-          <BoostButton onClick={boost} />
-          <Status distance={distance} speed={passiveSpeed} />
-          <Achievements
-            milestones={milestones.slice(0, currentMilestoneIndex)}
-            nextMilestone={milestones[currentMilestoneIndex]}
-          />
-        </>
-      ) : (
-        <div className="flex flex-col gap-10">
-          <LaunchButton onClick={launch} />
-          <Rules />
-        </div>
-      )}
-      {isLaunched && (
-        <button
-          className="p-2 py-8 text-xl border-4 hover:bg-blue-500 border-slate-300 rounded-2xl"
-          onClick={() => setIsPaused(!isPaused)}
-        >
-          {isPaused ? "Resume ➡️" : "Pause ⏸️"}
-        </button>
-      )}
-      {isLaunched && <BackButton onClick={back} />}
+    <div>
+      <Header />
+      <div className="flex flex-col gap-8 py-8">
+        {isLaunched ? (
+          <>
+            <BoostButton onClick={boost} />
+            <Status distance={distance} speed={passiveSpeed} />
+            <Achievements
+              milestones={milestones.slice(0, currentMilestoneIndex)}
+              nextMilestone={milestones[currentMilestoneIndex]}
+            />
+          </>
+        ) : (
+          <div className="flex flex-col gap-8 py-8 ">
+            <LaunchButton onClick={launch} />
+            <div className="flex flex-col gap-8 p-8">
+              <Rules />
+              <LaunchButton onClick={launch} />
+            </div>
+          </div>
+        )}
+        {isLaunched && <PauseResumeButton />}
+        {isLaunched && <BackButton onClick={back} />}
+      </div>
     </div>
   );
 }

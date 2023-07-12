@@ -4,11 +4,11 @@ function Achievements({ milestones, nextMilestone }) {
   return (
     <div className="flex flex-col justify-center gap-4 p-4 text-white rounded-lg shadow-md">
       {milestones[milestones.length - 1] && (
-        <div className="p-4 bg-blue-700 rounded-lg shadow-inner">
-          <h2 className="mb-2 font-mono text-3xl font-bold ">
-            Current Status:
+        <div className="flex flex-col gap-2 p-4 bg-blue-700 rounded-lg shadow-inner">
+          <h2 className="mb-2 font-mono text-3xl font-bold border-b border-blue-300 ">
+            Current Status
           </h2>
-          <p className="text-xl font-bold border-t border-blue-600">
+          <p className="text-xl font-bold ">
             {milestones[milestones.length - 1].step} at{" "}
             {milestones[milestones.length - 1].distance} miles
           </p>
@@ -22,8 +22,8 @@ function Achievements({ milestones, nextMilestone }) {
       )}
       {nextMilestone && (
         <div className="p-4 mt-4 bg-blue-700 rounded-lg shadow-inner">
-          <h2 className="mb-2 font-mono text-2xl font-semibold">
-            Next Milestone:
+          <h2 className="mb-2 font-mono text-3xl font-bold border-b border-blue-300 ">
+            Next Milestone
           </h2>
           <p className="flex flex-col pt-2 mt-2 border-t border-blue-600">
             {nextMilestone.step} at {nextMilestone.distance} miles.
@@ -32,7 +32,9 @@ function Achievements({ milestones, nextMilestone }) {
       )}
       {milestones.length > 1 && (
         <div className="p-4 mt-4 bg-blue-700 rounded-lg shadow-inner">
-          <h2 className="mb-2 font-mono text-2xl font-semibold">Log:</h2>
+          <h2 className="mb-2 font-mono text-3xl font-bold border-b border-blue-300 ">
+            Captain's Log
+          </h2>
           {milestones
             .slice(0, milestones.length - 1)
             .map((milestone, index) => (
@@ -46,7 +48,7 @@ function Achievements({ milestones, nextMilestone }) {
                 <p className="mt-1 text-sm">
                   Reached on: {milestone.completedAt}
                 </p>
-                <p className="mt-1 text-sm">{milestone.story}</p>
+                <p className="pt-4 mt-1 text-lg">{milestone.story}</p>
               </div>
             ))}
         </div>

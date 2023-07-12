@@ -5,13 +5,15 @@ function BoostButton({ onClick }) {
   return (
     <div className="flex justify-center">
       <motion.button
-        className="p-4 text-3xl text-white bg-blue-500 rounded-lg focus:outline-none"
+        className="p-8 text-4xl text-white bg-blue-500 rounded-2xl sm:p-16 focus:outline-none"
         onClick={onClick}
-        whileTap={{ scale: 1.5 }}
-        whileHover={{ scale: 0.9 }}
-        style={{
-          boxShadow:
-            "0 0 10px #ff6d00, 0 0 20px #ff6d00, 0 0 30px #ff6d00, 0 0 40px #ff6d00",
+        whileTap={{
+          scale: 1.2,
+          boxShadow: "0 0 50px 10px #FFD700", // Increased blur radius and added spread radius
+        }}
+        whileHover={{
+          scale: 0.9,
+          boxShadow: "0 0 30px #FFFFE0",
         }}
       >
         ⚡ Boost ⚡
